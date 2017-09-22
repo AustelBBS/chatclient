@@ -1,19 +1,20 @@
 $(function () {
         var seed = 0;
-        var socket = io();
+        var socket = io.connect('http://192.168.1.70:3000');
         $('form').submit(function(){
           var s = getSeed();
           var key = encrypt($('#m').val(), s);
+          console.log(s);
           socket.emit('seed', s);
           socket.emit('chat message', key);
+          console.log(key);
           $('#m').val('');
           return false;
         });   
         socket.on('chat message', function(key){
-          console.log('key ' + key);
           var msg = encrypt(key, -seed);
-              $('#messages').append($('<li>').text(key));
-              console.log('msg ' + msg);
+          $('#messages').append($('<li>').text(key));
+          console.log('msg ' + msg);
           });
           socket.on('seed', function(s){
           seed = s;
